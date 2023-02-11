@@ -1,0 +1,97 @@
+﻿@using FileManagerApp.Models;
+@using System.IO;
+@model List<FileModels>
+
+<div class="">
+    @*Header*@
+    <div class="">
+        <span class=""><i class="mr-2"></i>@ViewBag.currentTitle</span>
+    </div>
+    @*Body container*@
+    <div class="">
+        <section id="gallery">
+            <div class="card">
+                <div class="container">
+                    <div class="row align-items-start">
+                        @foreach (var directory in Model)
+                        {
+                            if (directory.extension != null)
+                            {
+                                switch (directory.extension)
+                                {
+                                    case ".xlsx":
+                                        <div class="text-center col">
+                                            <a class="file">
+                                                <i id="@directory.fullFileName" class="fa-solid fa-file-excel fa-5x " style="cursor:pointer; color:green;"></i>
+                                            </a>
+                                            <span class="text-lg text-secundary font-omnes-medium" style="position:relative; display:block">@directory.fileName</span>
+                                        </div>
+                                        break;
+
+                                    case ".docx":
+                                        <div class="text-center col">
+                                            <a class="file">
+                                                <i id="@directory.fullFileName" class="fa-solid fa-file-word fa-5x" style="cursor:pointer; color:blue;"></i>
+                                            </a>
+                                            <span class="text-lg text-secundary font-omnes-medium" style="position:relative; display:block">@directory.fileName</span>
+
+                                        </div>
+                                        break;
+
+                                    case ".pdf":
+                                        <div class="text-center col">
+                                            <a class="file" asp-action="">
+                                                <i id="@directory.folderName" class="fa-solid fa-file-pdf fa-5x" style="cursor:pointer; color:red;"></i>
+                                            </a>
+                                            <span class="text-lg text-secundary font-omnes-medium" style="position:relative; display:block">@directory.fileName</span>
+
+                                        </div>
+                                        break;
+                                }
+                            }
+                            else if (directory.extension == null)
+                            {
+                                <div class="text-center col">
+                                    <a class="folder">
+                                        <i id="value" class="fa-solid fa-folder fa-5x" style="cursor:pointer; color:yellow;">
+                                        </i>
+                                    </a>
+
+                                    <span class="" style="position:relative; display:block">@directory.folderName</span>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    @*Footer*@
+    <div class="p-3 bg-gray-200">
+    </div>
+</div>
+<script>
+    // action to send value to controller
+    window.addEventListener("load", (event) => {
+        window.addEventListener("click", function (e) {
+            //e = e || window.event;
+            //var target = e.target || e.srcElement,
+            //    text = target.textContent || target.innerText;
+            //const folderName = target.id;
+
+            console.log("click", e);
+
+            
+            if (e.target.localName == "path") {
+                //window.location.href = "SubRootView/folderName?=" + folderName;
+
+                var testUrl = "file:///C:/Users/Yore/Downloads/introducing-domain-driven-design-slides.pdf";
+                window.open(testUrl);
+                //$.get("SubRootView", { folderName: folderName, URL: folderName }).done(function (data) {
+                //    window.location.href = "SubRootView/folderName?=" + folderName;
+                //});
+            }
+
+        }, false);
+    });
+</script>

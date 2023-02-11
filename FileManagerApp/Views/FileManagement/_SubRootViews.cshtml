@@ -1,0 +1,99 @@
+﻿@using FileManagerApp.Models;
+@using System.IO;
+@model List<FileModels>
+
+<div class="">
+    @*Header*@
+    <div class="">
+        <span class=""><i class="mr-2 fa-solid fa-folder-open"></i>@ViewBag.currentTitle</span>
+    </div>
+    @*Body container*@
+    <div class=" bg-white p-5 scrollImages">
+        <section id="gallery">
+            <div class="card">
+                <div class="container">
+                    <div class="row align-items-start">
+                        @foreach (var directory in Model)
+                        {
+                            if (directory.extension != null)
+                            {
+                                switch (directory.extension)
+                                {
+                                    case ".xlsx":
+                                        <div class="text-center">
+                                            <a class="file">
+                                                <i id="@directory.fullFileName" class="fa-solid fa-file-excel fa-5x" style="cursor:pointer;"></i>
+                                            </a>
+                                            <span class="text-lg text-secundary font-omnes-medium" style="position:relative; display:block">@directory.fileName</span>
+                                        </div>
+                                        break;
+
+                                    case ".docx":
+                                        <div class="text-center">
+                                            <a class="file">
+                                                <i id="@directory.fullFileName" class="fa-solid fa-file-word fa-5x" style="cursor:pointer;"></i>
+                                            </a>
+                                            <span class="text-lg text-secundary font-omnes-medium" style="position:relative; display:block">@directory.fileName</span>
+
+                                        </div>
+                                        break;
+
+                                    case ".pdf":
+                                        <div class="text-center">
+                                            <a class="file">
+                                                <i id="@directory.fullFileName" class="fa-solid fa-file-pdf fa-5x" style="cursor:pointer;"></i>
+                                            </a>
+                                            <span class="text-lg text-secundary font-omnes-medium" style="position:relative; display:block">@directory.fileName</span>
+
+                                        </div>
+                                        break;
+                                }
+                            }
+                            else if (directory.extension == null)
+                            {
+                                <div class="text-center">
+                                    <a class="folder">
+                                        <i id="@directory.subDirName" class="fa-solid fa-folder fa-5x" style="cursor:pointer;">
+                                        </i>
+                                    </a>
+                                    <input id="directoryPath" value="@directory.currentParent" style="visibility:hidden" />
+                                    <span class="text-lg text-secundary font-omnes-medium" style="position:relative; display:block">@directory.subDirName</span>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    @*Footer*@
+    <div class="p-3 bg-gray-200">
+    </div>
+</div>
+<script>
+    // action to send value to controller
+    window.addEventListener("load", (event) => {
+        console.log("EVENTO LOAD", event);
+        window.addEventListener("click", function (e) {
+            e = e || window.event;
+            var target = e.target || e.srcElement,
+                text = target.textContent || target.innerText;
+            const folderName = target.id;
+            if (target.parentElement.className == "folder") {
+                let urlPath = document.getElementById('directoryPath').value;
+                $.get("SubFolders", { folderName: folderName, URL: urlPath }).done(function (data) {
+                    window.location.href = e.target.baseURI + '/' + folderName;
+                });
+                console.log("YOU CLICKED ON FOLDER", e);
+            }
+            else if (target.parentElement.className == "file") {
+                var filePath = target.id
+                console.log("EVENTO", e);
+                //window.open(filePath);
+                //window.location.href = e.target.id;
+                window.open("file://" + filePath, "_blank");
+                ///console.log("YOU CLICKED ON file", filePath);
+            }
+        }, false);
+    });
+</script>
